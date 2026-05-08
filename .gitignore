@@ -2,7 +2,10 @@
 __pycache__/
 *.py[codz]
 *$py.class
-
+*.db           
+venv/
+.env           
+instance/
 # C extensions
 *.so
 
