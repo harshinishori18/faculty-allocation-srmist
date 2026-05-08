@@ -54,3 +54,10 @@ def login():
     if not faculty:
         return jsonify({"error": "Invalid Faculty ID"}), 401
     return jsonify({"message": "Login successful", "faculty": faculty.to_dict()})
+# GET faculty by ID (used by frontend for edit/remove preview)
+@registration_bp.route('/faculty/<faculty_id>', methods=['GET'])
+def get_faculty(faculty_id):
+    faculty = Faculty.query.get(faculty_id)
+    if not faculty:
+        return jsonify({"error": "Faculty not found"}), 404
+    return jsonify(faculty.to_dict())
