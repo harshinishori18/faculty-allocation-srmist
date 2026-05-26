@@ -1,0 +1,41 @@
+[
+  {
+    "subject_name": "AI",
+    "slots_per_week": 3
+  },
+
+  {
+    "subject_name": "ML",
+    "slots_per_week": 2
+  },
+
+  {
+    "subject_name": "DBMS",
+    "slots_per_week": 4
+  },
+
+  {
+    "subject_name": "CN",
+    "slots_per_week": 3
+  },
+
+  {
+    "subject_name": "OS",
+    "slots_per_week": 3
+  },
+
+  {
+    "subject_name": "DAA",
+    "slots_per_week": 3
+  },
+
+  {
+    "subject_name": "TOC",
+    "slots_per_week": 2
+  },
+
+  {
+    "subject_name": "SE",
+    "slots_per_week": 2
+  }
+]
