@@ -1,0 +1,308 @@
+{
+    "schedule": [
+        {
+            "faculty_id": "F001",
+            "faculty_name": "Dr Sharma",
+            "subject": "AI",
+            "day": "Monday",
+            "slot_id": 1,
+            "start_time": "08:00",
+            "end_time": "08:50",
+            "block": "A"
+        },
+        {
+            "faculty_id": "F001",
+            "faculty_name": "Dr Sharma",
+            "subject": "AI",
+            "day": "Monday",
+            "slot_id": 2,
+            "start_time": "08:50",
+            "end_time": "09:40",
+            "block": "A"
+        },
+        {
+            "faculty_id": "F001",
+            "faculty_name": "Dr Sharma",
+            "subject": "AI",
+            "day": "Monday",
+            "slot_id": 3,
+            "start_time": "09:45",
+            "end_time": "10:35",
+            "block": "A"
+        },
+        {
+            "faculty_id": "F001",
+            "faculty_name": "Dr Sharma",
+            "subject": "ML",
+            "day": "Monday",
+            "slot_id": 4,
+            "start_time": "10:40",
+            "end_time": "11:30",
+            "block": "A"
+        },
+        {
+            "faculty_id": "F001",
+            "faculty_name": "Dr Sharma",
+            "subject": "ML",
+            "day": "Monday",
+            "slot_id": 5,
+            "start_time": "11:35",
+            "end_time": "12:25",
+            "block": "A"
+        },
+        {
+            "faculty_id": "F002",
+            "faculty_name": "Dr Rao",
+            "subject": "DBMS",
+            "day": "Monday",
+            "slot_id": 1,
+            "start_time": "08:00",
+            "end_time": "08:50",
+            "block": "A"
+        },
+        {
+            "faculty_id": "F002",
+            "faculty_name": "Dr Rao",
+            "subject": "DBMS",
+            "day": "Monday",
+            "slot_id": 2,
+            "start_time": "08:50",
+            "end_time": "09:40",
+            "block": "A"
+        },
+        {
+            "faculty_id": "F002",
+            "faculty_name": "Dr Rao",
+            "subject": "DBMS",
+            "day": "Monday",
+            "slot_id": 3,
+            "start_time": "09:45",
+            "end_time": "10:35",
+            "block": "A"
+        },
+        {
+            "faculty_id": "F002",
+            "faculty_name": "Dr Rao",
+            "subject": "DBMS",
+            "day": "Monday",
+            "slot_id": 4,
+            "start_time": "10:40",
+            "end_time": "11:30",
+            "block": "A"
+        },
+        {
+            "faculty_id": "F002",
+            "faculty_name": "Dr Rao",
+            "subject": "CN",
+            "day": "Monday",
+            "slot_id": 5,
+            "start_time": "11:35",
+            "end_time": "12:25",
+            "block": "A"
+        },
+        {
+            "faculty_id": "F002",
+            "faculty_name": "Dr Rao",
+            "subject": "CN",
+            "day": "Monday",
+            "slot_id": 6,
+            "start_time": "12:30",
+            "end_time": "01:20",
+            "block": "A"
+        },
+        {
+            "faculty_id": "F002",
+            "faculty_name": "Dr Rao",
+            "subject": "CN",
+            "day": "Monday",
+            "slot_id": 7,
+            "start_time": "01:25",
+            "end_time": "02:15",
+            "block": "A"
+        },
+        {
+            "faculty_id": "F003",
+            "faculty_name": "Dr Mehta",
+            "subject": "OS",
+            "day": "Monday",
+            "slot_id": 1,
+            "start_time": "08:00",
+            "end_time": "08:50",
+            "block": "A"
+        },
+        {
+            "faculty_id": "F003",
+            "faculty_name": "Dr Mehta",
+            "subject": "OS",
+            "day": "Monday",
+            "slot_id": 2,
+            "start_time": "08:50",
+            "end_time": "09:40",
+            "block": "A"
+        },
+        {
+            "faculty_id": "F003",
+            "faculty_name": "Dr Mehta",
+            "subject": "OS",
+            "day": "Monday",
+            "slot_id": 3,
+            "start_time": "09:45",
+            "end_time": "10:35",
+            "block": "A"
+        },
+        {
+            "faculty_id": "F004",
+            "faculty_name": "Dr Iyer",
+            "subject": "DAA",
+            "day": "Monday",
+            "slot_id": 1,
+            "start_time": "08:00",
+            "end_time": "08:50",
+            "block": "A"
+        },
+        {
+            "faculty_id": "F004",
+            "faculty_name": "Dr Iyer",
+            "subject": "DAA",
+            "day": "Monday",
+            "slot_id": 2,
+            "start_time": "08:50",
+            "end_time": "09:40",
+            "block": "A"
+        },
+        {
+            "faculty_id": "F004",
+            "faculty_name": "Dr Iyer",
+            "subject": "DAA",
+            "day": "Monday",
+            "slot_id": 3,
+            "start_time": "09:45",
+            "end_time": "10:35",
+            "block": "A"
+        },
+        {
+            "faculty_id": "F004",
+            "faculty_name": "Dr Iyer",
+            "subject": "TOC",
+            "day": "Monday",
+            "slot_id": 4,
+            "start_time": "10:40",
+            "end_time": "11:30",
+            "block": "A"
+        },
+        {
+            "faculty_id": "F004",
+            "faculty_name": "Dr Iyer",
+            "subject": "TOC",
+            "day": "Monday",
+            "slot_id": 5,
+            "start_time": "11:35",
+            "end_time": "12:25",
+            "block": "A"
+        },
+        {
+            "faculty_id": "F005",
+            "faculty_name": "Dr Verma",
+            "subject": "SE",
+            "day": "Monday",
+            "slot_id": 1,
+            "start_time": "08:00",
+            "end_time": "08:50",
+            "block": "A"
+        },
+        {
+            "faculty_id": "F005",
+            "faculty_name": "Dr Verma",
+            "subject": "SE",
+            "day": "Monday",
+            "slot_id": 2,
+            "start_time": "08:50",
+            "end_time": "09:40",
+            "block": "A"
+        }
+    ],
+    "analytics": {
+        "workload": {
+            "Dr Sharma": {
+                "total_classes": 5,
+                "daily_classes": {
+                    "Monday": 5
+                },
+                "consecutive_classes": 4,
+                "idle_gaps": 0,
+                "workload_score": 22
+            },
+            "Dr Rao": {
+                "total_classes": 7,
+                "daily_classes": {
+                    "Monday": 7
+                },
+                "consecutive_classes": 6,
+                "idle_gaps": 0,
+                "workload_score": 32
+            },
+            "Dr Mehta": {
+                "total_classes": 3,
+                "daily_classes": {
+                    "Monday": 3
+                },
+                "consecutive_classes": 2,
+                "idle_gaps": 0,
+                "workload_score": 12
+            },
+            "Dr Iyer": {
+                "total_classes": 5,
+                "daily_classes": {
+                    "Monday": 5
+                },
+                "consecutive_classes": 4,
+                "idle_gaps": 0,
+                "workload_score": 22
+            },
+            "Dr Verma": {
+                "total_classes": 2,
+                "daily_classes": {
+                    "Monday": 2
+                },
+                "consecutive_classes": 1,
+                "idle_gaps": 0,
+                "workload_score": 7
+            }
+        },
+        "movement": {
+            "Dr Sharma": {
+                "total_transitions": 0,
+                "movement_penalty": 0,
+                "daily_movements": {}
+            },
+            "Dr Rao": {
+                "total_transitions": 0,
+                "movement_penalty": 0,
+                "daily_movements": {}
+            },
+            "Dr Mehta": {
+                "total_transitions": 0,
+                "movement_penalty": 0,
+                "daily_movements": {}
+            },
+            "Dr Iyer": {
+                "total_transitions": 0,
+                "movement_penalty": 0,
+                "daily_movements": {}
+            },
+            "Dr Verma": {
+                "total_transitions": 0,
+                "movement_penalty": 0,
+                "daily_movements": {}
+            }
+        }
+    },
+    "score": {
+        "final_score": 915,
+        "penalties": {
+            "movement_penalty": 0,
+            "consecutive_penalty": 85,
+            "gap_penalty": 0
+        }
+    }
+}
