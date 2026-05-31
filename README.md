@@ -12,21 +12,12 @@ A web application to manage and allocate subjects to faculty members.
 - **Database:** SQLite (via SQLAlchemy)
 - **Frontend:** HTML, CSS, Jinja2
 
-## Setup Instructions
-1. Clone the repo
-   git clone https://github.com/YOUR-USERNAME/faculty-allocation-srmist.git
-
-2. Install dependencies
-   pip install -r requirements.txt
-
-3. Run the app
-   python app.py
-
-4. Open http://localhost:5000
-
 ## Team
-- Your Name (your roll number)
-- Teammate Name (their roll number)
+Harshini Shori
+RA2411027010030
+
+Arjun Tyagi
+RA2411027010027
 
 ## Mentor
-- Prof. [Name] — SRMIST
+Prof. Geetha Jennifel — SRMIST
