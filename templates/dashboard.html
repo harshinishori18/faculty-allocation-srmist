@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard — SRMIST Faculty Portal</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}"/>
+</head>
+<body>
+
+  <header>
+    <div class="header-left">
+      <p class="eyebrow">SRM Institute of Science and Technology</p>
+      <h1>Faculty Allocation System</h1>
+    </div>
+    <div class="header-right">
+      <a href="/" style="color:rgba(244,241,222,0.5);
+         text-decoration:none; font-size:11px; letter-spacing:2px;
+         text-transform:uppercase;">← Back to Portal</a>
+    </div>
+  </header>
+
+  <div class="dashboard-container">
+
+    <!-- Workload lookup -->
+    <div class="dash-card">
+      <p class="overline">Individual View</p>
+      <h3>Faculty Workload</h3>
+      <div class="search-row">
+        <input type="text" id="workload_name"
+               placeholder="Enter Faculty Name (e.g. Dr Sharma)"/>
+        <button class="btn-primary" onclick="loadWorkload()">View</button>
+      </div>
+      <div id="workload_result" class="result-box" style="display:none;"></div>
+      <p id="workload_msg" class="msg"></p>
+    </div>
+
+    <!-- Full schedule -->
+    <div class="dash-card wide">
+      <p class="overline">System View</p>
+      <h3>Generated Schedule</h3>
+      <button class="btn-secondary" onclick="loadSchedule()">Load Schedule</button>
+      <div id="schedule_table" style="margin-top:20px;"></div>
+    </div>
+
+  </div>
+
+  <script>
+    async function loadWorkload() {
+      const name = document.getElementById('workload_name').value.trim();
+      const msg  = document.getElementById('workload_msg');
+      const box  = document.getElementById('workload_result');
+
+      if (!name) { msg.textContent = 'Enter a faculty name.'; msg.className='msg error'; return; }
+
+      const res  = await fetch('/schedule/workload/' + encodeURIComponent(name));
+      const data = await res.json();
+
+      if (!res.ok) {
+        msg.textContent = data.error;
+        msg.className = 'msg error';
+        box.style.display = 'none';
+        return;
+      }
+
+      msg.textContent = '';
+      box.style.display = 'block';
+      box.innerHTML = `
+        <div class="stat-row">
+          <div class="stat"><span class="stat-num">${data.total_classes}</span><span class="stat-label">Total Classes</span></div>
+          <div class="stat"><span class="stat-num">${data.consecutive_classes}</span><span class="stat-label">Consecutive</span></div>
+          <div class="stat"><span class="stat-num">${data.idle_gaps}</span><span class="stat-label">Idle Gaps</span></div>
+          <div class="stat"><span class="stat-num">${data.workload_score}</span><span class="stat-label">Score</span></div>
+        </div>
+        <table class="sched-table">
+          <tr><th>Day</th><th>Classes</th></tr>
+          ${Object.entries(data.daily_classes).map(([d,c]) => `<tr><td>${d}</td><td>${c}</td></tr>`).join('')}
+        </table>`;
+    }
+
+    async function loadSchedule() {
+      const res  = await fetch('/schedule/generate');
+      const data = await res.json();
+      const rows = data.schedule.map(e =>
+        `<tr><td>${e.day}</td><td>${e.faculty_name}</td><td>${e.subject}</td>
+         <td>${e.start_time}–${e.end_time}</td><td>Block ${e.block}</td></tr>`
+      ).join('');
+      document.getElementById('schedule_table').innerHTML = `
+        <table class="sched-table">
+          <tr><th>Day</th><th>Faculty</th><th>Subject</th><th>Time</th><th>Block</th></tr>
+          ${rows}
+        </table>`;
+    }
+  </script>
+</body>
+</html>

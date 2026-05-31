@@ -1,7 +1,44 @@
-function openModal(id)  { document.getElementById(id).classList.add('active'); }
-function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+// ── Open / Close ──────────────────────────────────────────
+function openModal(id) {
+  clearModal(id);
+  document.getElementById(id).classList.add('active');
+}
 
-// ADD
+function closeModal(id) {
+  document.getElementById(id).classList.remove('active');
+}
+
+// Close when clicking the dark overlay background
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.modal-overlay').forEach(overlay => {
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) closeModal(overlay.id);
+    });
+  });
+});
+
+// ── Clear fields on open ──────────────────────────────────
+function clearModal(id) {
+  document.getElementById(id).querySelectorAll('input').forEach(i => i.value = '');
+
+  if (id === 'editModal') {
+    document.getElementById('edit_fields').style.display = 'none';
+    document.getElementById('edit_msg').textContent = '';
+    document.getElementById('edit_msg').className = 'msg';
+  }
+  if (id === 'removeModal') {
+    document.getElementById('remove_preview').style.display = 'none';
+    document.getElementById('confirm_remove_btn').style.display = 'none';
+    document.getElementById('remove_msg').textContent = '';
+    document.getElementById('remove_msg').className = 'msg';
+  }
+  if (id === 'addModal') {
+    document.getElementById('add_msg').textContent = '';
+    document.getElementById('add_msg').className = 'msg';
+  }
+}
+
+// ── ADD ───────────────────────────────────────────────────
 async function addFaculty() {
   const body = {
     faculty_id: document.getElementById('add_faculty_id').value,
@@ -20,7 +57,7 @@ async function addFaculty() {
   msg.className   = 'msg ' + (res.ok ? 'success' : 'error');
 }
 
-// SEARCH for edit
+// ── SEARCH for edit ───────────────────────────────────────
 async function searchFaculty() {
   const id  = document.getElementById('edit_search_id').value;
   const res = await fetch('/faculty/' + id);
@@ -38,7 +75,7 @@ async function searchFaculty() {
   }
 }
 
-// EDIT
+// ── EDIT ──────────────────────────────────────────────────
 async function editFaculty() {
   const id   = document.getElementById('edit_search_id').value;
   const body = {
@@ -57,15 +94,15 @@ async function editFaculty() {
   msg.className   = 'msg ' + (res.ok ? 'success' : 'error');
 }
 
-// PREVIEW before remove
+// ── PREVIEW before remove ─────────────────────────────────
 async function previewRemove() {
   const id  = document.getElementById('remove_id').value;
   const res = await fetch('/faculty/' + id);
   const data = await res.json();
   const msg  = document.getElementById('remove_msg');
   if (res.ok) {
-    document.getElementById('remove_name').textContent  = '👤 ' + data.username;
-    document.getElementById('remove_email').textContent = '✉️ ' + data.email;
+    document.getElementById('remove_name').textContent  = data.username;
+    document.getElementById('remove_email').textContent = data.email;
     document.getElementById('remove_preview').style.display = 'block';
     document.getElementById('confirm_remove_btn').style.display = 'inline-block';
     msg.textContent = '';
@@ -75,7 +112,7 @@ async function previewRemove() {
   }
 }
 
-// REMOVE
+// ── REMOVE ────────────────────────────────────────────────
 async function removeFaculty() {
   const id  = document.getElementById('remove_id').value;
   const res = await fetch('/faculty/remove/' + id, { method: 'DELETE' });

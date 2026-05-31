@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login — SRMIST Faculty Portal</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"/>
+</head>
+<body>
+
+  <header>
+    <div class="header-left">
+      <p class="eyebrow">SRM Institute of Science and Technology</p>
+      <h1>Faculty Allocation System</h1>
+    </div>
+    <div class="header-right">Academic Portal</div>
+  </header>
+
+  <main>
+    <div class="card">
+      <p class="overline">Secure Access</p>
+      <h2>Faculty<br>Login</h2>
+      <div class="divider"></div>
+      <p class="subtitle">Enter your Faculty ID to access the portal.</p>
+
+      <div style="width:100%; text-align:left;">
+        <input type="text" id="login_faculty_id"
+               placeholder="Faculty ID (e.g. TP12345)"
+               style="width:100%; padding:13px 16px; margin-bottom:12px;
+                      border:1px solid rgba(244,241,222,0.25); border-radius:8px;
+                      background:rgba(255,255,255,0.08); color:#F4F1DE;
+                      font-family:'DM Sans',sans-serif; font-size:14px; outline:none;"/>
+      </div>
+
+      <div class="btn-group">
+        <button class="btn-primary" onclick="login()">Sign In</button>
+        <a href="/" style="text-decoration:none;">
+          <button class="btn-secondary" style="width:100%;">Back</button>
+        </a>
+      </div>
+      <p id="login_msg" class="msg"></p>
+    </div>
+  </main>
+
+  <script>
+    async function login() {
+      const faculty_id = document.getElementById('login_faculty_id').value.trim();
+      const msg = document.getElementById('login_msg');
+
+      if (!faculty_id) {
+        msg.textContent = 'Please enter your Faculty ID.';
+        msg.className = 'msg error';
+        return;
+      }
+
+      const res = await fetch('/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ faculty_id })
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        msg.textContent = 'Login successful. Redirecting...';
+        msg.className = 'msg success';
+        setTimeout(() => { window.location.href = '/dashboard'; }, 1000);
+      } else {
+        msg.textContent = data.error || 'Invalid Faculty ID.';
+        msg.className = 'msg error';
+      }
+    }
+
+    // Allow Enter key to submit
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') login();
+    });
+  </script>
+</body>
+</html>
