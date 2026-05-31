@@ -70,6 +70,7 @@
   border-radius: 10px;
   padding: 14px 10px;
   text-align: center;
+  overflow: hidden;
 }
 
 .stat-num {
@@ -82,11 +83,15 @@
 
 .stat-label {
   display: block;
-  font-size: 10px;
-  letter-spacing: 2px;
+  font-size: 9px;
+  letter-spacing: 1px;
   text-transform: uppercase;
   color: rgba(244, 241, 222, 0.5);
   margin-top: 4px;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+  line-height: 1.4;
 }
 
 .sched-table {
