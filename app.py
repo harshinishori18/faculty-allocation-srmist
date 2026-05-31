@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, session
 from config import db
 from routes.registration import registration_bp
 from routes.scheduler import scheduler_bp
@@ -24,7 +24,8 @@ def login_page():
 
 @app.route('/dashboard')
 def dashboard():
-    return render_template('dashboard.html')
+    faculty_name = session.get('faculty_name', '')
+    return render_template('dashboard.html', faculty_name=faculty_name)
 
 if __name__ == '__main__':
     app.run(debug=True)

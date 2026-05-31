@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, session
 from config import db
 from models.faculty import Faculty
 
@@ -53,6 +53,8 @@ def login():
     faculty = Faculty.query.get(data['faculty_id'])
     if not faculty:
         return jsonify({"error": "Invalid Faculty ID"}), 401
+    session['faculty_id'] = faculty.faculty_id
+    session['faculty_name'] = faculty.username
     return jsonify({"message": "Login successful", "faculty": faculty.to_dict()})
 # GET faculty by ID — used by edit and remove search
 @registration_bp.route('/faculty/<faculty_id>', methods=['GET'])
