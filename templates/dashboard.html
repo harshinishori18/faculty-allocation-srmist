@@ -37,17 +37,69 @@
 
     <!-- Schedule card -->
     <div class="dash-card wide">
-      <p class="overline">Your Timetable</p>
-      <h3>Assigned Schedule</h3>
-      <div id="schedule_table" style="margin-top:20px;">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:12px;">
+        <div>
+          <p class="overline">Your Timetable</p>
+          <h3>Assigned Schedule</h3>
+        </div>
+        <div style="display:flex; gap:8px; margin-top:4px;">
+          <button id="btn-list" onclick="switchView('list')"
+            style="background:rgba(242,204,143,0.12); color:var(--gold);
+                   border:1px solid var(--gold); padding:8px 18px;
+                   border-radius:8px; font-family:'DM Sans',sans-serif;
+                   font-size:11px; letter-spacing:1.5px; text-transform:uppercase;
+                   cursor:pointer;">List View</button>
+          <button id="btn-grid" onclick="switchView('grid')"
+            style="background:transparent; color:rgba(244,241,222,0.45);
+                   border:1px solid rgba(244,241,222,0.15); padding:8px 18px;
+                   border-radius:8px; font-family:'DM Sans',sans-serif;
+                   font-size:11px; letter-spacing:1.5px; text-transform:uppercase;
+                   cursor:pointer; transition:all 0.2s;">Timetable View</button>
+        </div>
+      </div>
+
+      <!-- List view -->
+      <div id="schedule_list" style="margin-top:20px;">
         <p style="color:rgba(244,241,222,0.4); font-size:14px;">Loading schedule...</p>
       </div>
+
+      <!-- Grid view (hidden by default) -->
+      <div id="schedule_grid" style="display:none; margin-top:20px; overflow-x:auto;"></div>
     </div>
 
   </div>
 
   <script>
     const FACULTY_NAME = "{{ faculty_name }}";
+    let cachedClasses = [];
+
+    function switchView(view) {
+      const listEl  = document.getElementById('schedule_list');
+      const gridEl  = document.getElementById('schedule_grid');
+      const btnList = document.getElementById('btn-list');
+      const btnGrid = document.getElementById('btn-grid');
+
+      if (view === 'list') {
+        listEl.style.display = 'block';
+        gridEl.style.display = 'none';
+        btnList.style.background = 'rgba(242,204,143,0.12)';
+        btnList.style.color = 'var(--gold)';
+        btnList.style.borderColor = 'var(--gold)';
+        btnGrid.style.background = 'transparent';
+        btnGrid.style.color = 'rgba(244,241,222,0.45)';
+        btnGrid.style.borderColor = 'rgba(244,241,222,0.15)';
+      } else {
+        listEl.style.display = 'none';
+        gridEl.style.display = 'block';
+        btnGrid.style.background = 'rgba(242,204,143,0.12)';
+        btnGrid.style.color = 'var(--gold)';
+        btnGrid.style.borderColor = 'var(--gold)';
+        btnList.style.background = 'transparent';
+        btnList.style.color = 'rgba(244,241,222,0.45)';
+        btnList.style.borderColor = 'rgba(244,241,222,0.15)';
+        if (cachedClasses.length) renderTimetable(cachedClasses);
+      }
+    }
 
     async function loadWorkload() {
       if (!FACULTY_NAME) return;
@@ -55,14 +107,11 @@
       const data = await res.json();
       const box  = document.getElementById('workload_result');
       const msg  = document.getElementById('workload_msg');
-
       if (!res.ok) {
         msg.textContent = 'No schedule data found for ' + FACULTY_NAME + '.';
         msg.className = 'msg error';
-        box.style.display = 'none';
         return;
       }
-
       box.style.display = 'block';
       box.innerHTML = `
         <div class="stat-row">
@@ -81,35 +130,87 @@
     async function loadSchedule() {
       const res  = await fetch('/schedule/generate');
       const data = await res.json();
-
-      // Filter to only show logged-in faculty's classes
-      const myClasses = data.schedule.filter(e =>
+      cachedClasses = data.schedule.filter(e =>
         e.faculty_name.toLowerCase() === FACULTY_NAME.toLowerCase()
       );
-
-      if (myClasses.length === 0) {
-        document.getElementById('schedule_table').innerHTML =
-          '<p style="color:rgba(244,241,222,0.4); font-size:14px;">No classes assigned yet.</p>';
+      if (cachedClasses.length === 0) {
+        document.getElementById('schedule_list').innerHTML =
+          '<p style="color:rgba(244,241,222,0.4);font-size:14px;">No classes assigned yet.</p>';
         return;
       }
-
-      const rows = myClasses.map(e =>
-        `<tr>
-          <td>${e.day}</td>
-          <td>${e.subject}</td>
-          <td>${e.start_time}–${e.end_time}</td>
-          <td>Block ${e.block}</td>
-        </tr>`
+      const rows = cachedClasses.map(e =>
+        `<tr><td>${e.day}</td><td>${e.subject}</td><td>${e.start_time}–${e.end_time}</td><td>Block ${e.block}</td></tr>`
       ).join('');
-
-      document.getElementById('schedule_table').innerHTML = `
+      document.getElementById('schedule_list').innerHTML = `
         <table class="sched-table">
           <tr><th>Day</th><th>Subject</th><th>Time</th><th>Block</th></tr>
           ${rows}
         </table>`;
     }
 
-    // Auto-load both on page open
+    function renderTimetable(classes) {
+      const dayOrder = ['Monday','Tuesday','Wednesday','Thursday','Friday'];
+      const slotsMap = {};
+      classes.forEach(e => {
+        if (!slotsMap[e.slot_id])
+          slotsMap[e.slot_id] = { id: e.slot_id, start: e.start_time, end: e.end_time };
+      });
+      const slots = Object.values(slotsMap).sort((a,b) => a.id - b.id);
+      const daysPresent = new Set(classes.map(e => e.day));
+      const days = dayOrder.filter(d => daysPresent.has(d));
+      const lookup = {};
+      classes.forEach(e => {
+        if (!lookup[e.day]) lookup[e.day] = {};
+        lookup[e.day][e.slot_id] = e;
+      });
+
+      let html = `<table style="width:100%;border-collapse:collapse;min-width:600px;">
+        <thead><tr>
+          <th style="background:rgba(61,64,91,0.6);color:var(--gold);font-size:9px;
+              letter-spacing:3px;text-transform:uppercase;padding:14px 18px;
+              text-align:left;font-weight:400;border-bottom:1px solid rgba(244,241,222,0.1);
+              border-right:1px solid rgba(244,241,222,0.08);min-width:110px;">Day</th>`;
+
+      slots.forEach(s => {
+        html += `<th style="background:rgba(61,64,91,0.4);padding:12px 10px;text-align:center;
+            border-bottom:1px solid rgba(244,241,222,0.1);
+            border-right:1px solid rgba(244,241,222,0.05);min-width:90px;">
+          <span style="display:block;font-size:12px;font-weight:500;color:var(--eggshell);font-family:'DM Sans',sans-serif;">${s.start}</span>
+          <span style="display:block;font-size:10px;color:rgba(244,241,222,0.4);margin-top:2px;font-family:'DM Sans',sans-serif;">${s.end}</span>
+        </th>`;
+      });
+      html += '</tr></thead><tbody>';
+
+      days.forEach((day, i) => {
+        html += `<tr>
+          <td style="background:rgba(61,64,91,0.35);padding:14px 18px;
+              border-right:1px solid rgba(244,241,222,0.08);
+              border-bottom:1px solid rgba(244,241,222,0.05);white-space:nowrap;">
+            <span style="display:block;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);font-weight:400;">Day ${i+1}</span>
+            <span style="display:block;font-size:14px;color:var(--eggshell);font-family:'Cormorant Garamond',serif;margin-top:2px;">${day}</span>
+          </td>`;
+        slots.forEach(s => {
+          const entry = lookup[day]?.[s.id];
+          if (entry) {
+            html += `<td style="padding:10px 8px;text-align:center;
+                background:rgba(224,122,95,0.12);
+                border:1px solid rgba(224,122,95,0.2);">
+              <span style="display:block;font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:600;color:var(--eggshell);">${entry.subject}</span>
+              <span style="display:block;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(242,204,143,0.7);margin-top:3px;">Blk ${entry.block}</span>
+            </td>`;
+          } else {
+            html += `<td style="padding:10px 8px;background:rgba(244,241,222,0.02);
+                border-right:1px solid rgba(244,241,222,0.05);
+                border-bottom:1px solid rgba(244,241,222,0.05);"></td>`;
+          }
+        });
+        html += '</tr>';
+      });
+
+      html += '</tbody></table>';
+      document.getElementById('schedule_grid').innerHTML = html;
+    }
+
     window.onload = () => {
       loadWorkload();
       loadSchedule();
