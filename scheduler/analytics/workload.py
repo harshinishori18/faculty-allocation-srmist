@@ -8,55 +8,97 @@ def analyze_faculty_workload(schedule):
         "total_classes": 0,
         "daily_classes": defaultdict(int),
         "consecutive_classes": 0,
-        "idle_gaps": 0
+        "idle_gaps": 0,
+        "subjects": set(),
+        "sections": set()
 
     })
 
-    # GROUP schedules by faculty + day
     grouped_schedule = defaultdict(list)
 
     for entry in schedule:
 
-        key = (
-            entry["faculty_name"],
-            entry["day"]
+        faculty_id = entry["faculty_name"]
+
+        day_order = entry["day_order"]
+
+        grouped_schedule[
+            (faculty_id, day_order)
+        ].append(entry)
+
+        stats = faculty_stats[faculty_id]
+
+        stats["subjects"].add(
+            entry["subject_name"]
         )
 
-        grouped_schedule[key].append(entry)
+        stats["sections"].add(
+            entry["section"]
+        )
 
-    # ANALYZE each faculty-day
-    for (faculty_name, day), entries in grouped_schedule.items():
+    for (
+        faculty_id,
+        day_order
+    ), entries in grouped_schedule.items():
 
-        entries.sort(key=lambda x: x["slot_id"])
+        entries.sort(
+            key=lambda x: x["period"]
+        )
 
-        stats = faculty_stats[faculty_name]
+        stats = faculty_stats[faculty_id]
 
         stats["total_classes"] += len(entries)
-        stats["daily_classes"][day] = len(entries)
 
-        # CHECK consecutive classes + gaps
-        for i in range(len(entries) - 1):
+        stats["daily_classes"][
+            day_order
+        ] = len(entries)
 
-            current_slot = entries[i]["slot_id"]
-            next_slot = entries[i + 1]["slot_id"]
+        for i in range(
+            len(entries) - 1
+        ):
 
-            difference = next_slot - current_slot
+            current_period = entries[i]["period"]
+
+            next_period = entries[i + 1]["period"]
+
+            difference = (
+                next_period
+                - current_period
+            )
 
             if difference == 1:
-                stats["consecutive_classes"] += 1
+
+                stats[
+                    "consecutive_classes"
+                ] += 1
 
             elif difference > 1:
-                stats["idle_gaps"] += difference - 1
 
-    # CALCULATE workload score
-    for faculty_name, stats in faculty_stats.items():
+                stats["idle_gaps"] += (
+                    difference - 1
+                )
 
-        workload_score = (
-            stats["total_classes"] * 2
-            + stats["consecutive_classes"] * 3
-            + stats["idle_gaps"] * 1
+    for faculty_id, stats in faculty_stats.items():
+
+        stats["unique_subjects"] = len(
+            stats["subjects"]
         )
 
-        stats["workload_score"] = workload_score
+        stats["unique_sections"] = len(
+            stats["sections"]
+        )
+
+        stats["workload_score"] = (
+
+            stats["total_classes"] * 10
+
+            + stats["unique_subjects"] * 5
+
+            - stats["idle_gaps"] * 2
+
+        )
+
+        del stats["subjects"]
+        del stats["sections"]
 
     return faculty_stats

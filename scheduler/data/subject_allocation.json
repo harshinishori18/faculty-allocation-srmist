@@ -1,0 +1,38 @@
+[
+  {
+    "faculty_id": "F001",
+    "faculty_name": "Dr. Ramesh",
+    "section": "AA2",
+    "subject_code": "CS101",
+    "subject_name": "DSA",
+    "slot": "B",
+    "hours_per_week": 4
+  },
+  {
+    "faculty_id": "F002",
+    "faculty_name": "Dr. Priya",
+    "section": "AA2",
+    "subject_code": "CS102",
+    "subject_name": "DBMS",
+    "slot": "C",
+    "hours_per_week": 3
+  },
+  {
+    "faculty_id": "F003",
+    "faculty_name": "Dr. Rajakani",
+    "section": "AA2",
+    "subject_code": "CS103",
+    "subject_name": "DAA",
+    "slot": "A",
+    "hours_per_week": 3
+  },
+  {
+    "faculty_id": "F004",
+    "faculty_name": "Dr. Prasanna",
+    "section": "AA2",
+    "subject_code": "CS104",
+    "subject_name": "OS",
+    "slot": "D",
+    "hours_per_week": 3
+  }
+]

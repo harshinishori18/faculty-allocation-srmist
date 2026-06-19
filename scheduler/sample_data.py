@@ -15,5 +15,5 @@ def load_json(filename):
 faculty_data = load_json("faculty.json")
 subjects = load_json("subjects.json")
 time_slots = load_json("slots.json")
-blocks = load_json("blocks.json")
-days = load_json("days.json")
+subject_allocations = load_json("subject_allocation.json")
+day_orders = load_json("day_orders.json")

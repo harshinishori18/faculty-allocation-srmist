@@ -1,92 +1,102 @@
 import json
 import os
 
-from schedule_generator import generate_schedule
-
-from analytics.workload import (
+from scheduler.schedule_generator import generate_schedule
+from scheduler.analytics.workload import (
     analyze_faculty_workload
 )
 
-from analytics.movement import (
-    analyze_faculty_movement
-)
 
-from analytics.scoring import (
-    calculate_schedule_score
-)
+def build_faculty_timetable(schedule):
 
+    faculty_timetables = {}
+
+    for entry in schedule:
+
+        faculty = entry["faculty_name"]
+
+        day = entry["day_order"]
+
+        period = entry["period"]
+
+        if faculty not in faculty_timetables:
+            faculty_timetables[faculty] = {}
+
+        if day not in faculty_timetables[faculty]:
+            faculty_timetables[faculty][day] = {}
+
+        faculty_timetables[faculty][day][period] = entry
+
+    return faculty_timetables
+
+def build_matrix_timetable(schedule):
+
+    timetable = {}
+
+    for entry in schedule:
+
+        faculty = entry["faculty_name"]
+
+        period = entry["period"]
+
+        day = entry["day_order"]
+
+        if faculty not in timetable:
+            timetable[faculty] = {}
+
+        if period not in timetable[faculty]:
+            timetable[faculty][period] = {}
+
+        timetable[faculty][period][day] = entry
+
+    return timetable
 
 def export_schedule():
 
     schedule = generate_schedule()
 
+    faculty_timetable = build_faculty_timetable(
+        schedule
+    )
+
     workload_data = analyze_faculty_workload(
         schedule
-    )
-
-    movement_data = analyze_faculty_movement(
-        schedule
-    )
-
-    schedule_score = calculate_schedule_score(
-        workload_data,
-        movement_data
     )
 
     export_data = {
 
         "schedule": schedule,
 
-        "analytics": {
+        "faculty_timetable":
+        faculty_timetable,
 
-            "workload": {
+        "workload":
+        {
+            faculty: {
 
-                faculty: {
+                "total_classes":
+                stats["total_classes"],
 
-                    "total_classes":
-                    stats["total_classes"],
+                "unique_subjects":
+                stats["unique_subjects"],
 
-                    "daily_classes":
-                    dict(stats["daily_classes"]),
+                "unique_sections":
+                stats["unique_sections"],
 
-                    "consecutive_classes":
-                    stats["consecutive_classes"],
+                "consecutive_classes":
+                stats["consecutive_classes"],
 
-                    "idle_gaps":
-                    stats["idle_gaps"],
+                "idle_gaps":
+                stats["idle_gaps"],
 
-                    "workload_score":
-                    stats["workload_score"]
+                "workload_score":
+                stats["workload_score"]
 
-                }
-
-                for faculty, stats
-                in workload_data.items()
-            },
-
-            "movement": {
-
-                faculty: {
-
-                    "total_transitions":
-                    stats["total_transitions"],
-
-                    "movement_penalty":
-                    stats["movement_penalty"],
-
-                    "daily_movements":
-                    dict(stats["daily_movements"])
-
-                }
-
-                for faculty, stats
-                in movement_data.items()
             }
 
-        },
-
-        "score": schedule_score
-
+            for faculty, stats
+            in workload_data.items()
+        }
     }
 
     output_dir = os.path.join(
@@ -94,14 +104,20 @@ def export_schedule():
         "output"
     )
 
-    os.makedirs(output_dir, exist_ok=True)
+    os.makedirs(
+        output_dir,
+        exist_ok=True
+    )
 
     output_path = os.path.join(
         output_dir,
         "schedule_output.json"
     )
 
-    with open(output_path, "w") as file:
+    with open(
+        output_path,
+        "w"
+    ) as file:
 
         json.dump(
             export_data,
@@ -114,7 +130,11 @@ def export_schedule():
         f"{output_path}"
     )
 
+    return (
+        faculty_timetable,
+        workload_data
+    )
+
 
 if __name__ == "__main__":
-
     export_schedule()

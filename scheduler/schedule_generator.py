@@ -1,124 +1,195 @@
-
-from constraints import faculty_conflict
-import random   
-
-from sample_data import (
-    faculty_data,
-    subjects,
-    time_slots,
-    days,
-    blocks
+from scheduler.constraints import (
+    faculty_conflict,
+    section_conflict
 )
 
-def find_faculty_for_subject(subject_name):
+from scheduler.sample_data import (
+    subject_allocations,
+    time_slots,
+    day_orders
+)
 
-    for faculty in faculty_data:
 
-        if subject_name in faculty["subjects"]:
-            return faculty
-
-    return None
-
-def get_previous_block(
+def get_faculty_periods(
     schedule,
     faculty_id,
     day
 ):
 
-    faculty_entries = [
+    periods = []
 
-        entry for entry in schedule
+    for entry in schedule:
 
         if (
             entry["faculty_id"] == faculty_id
-            and entry["day"] == day
-        )
-    ]
+            and entry["day_order"] == day
+        ):
+            periods.append(
+                entry["period"]
+            )
 
-    if not faculty_entries:
-        return None
+    return periods
 
-    latest_entry = max(
-        faculty_entries,
-        key=lambda x: x["slot_id"]
-    )
 
-    return latest_entry["block"]
-
-def assign_optimized_block(
+def faculty_daily_load(
     schedule,
     faculty_id,
     day
 ):
 
-    previous_block = get_previous_block(
+    count = 0
+
+    for entry in schedule:
+
+        if (
+            entry["faculty_id"] == faculty_id
+            and entry["day_order"] == day
+        ):
+            count += 1
+
+    return count
+
+
+def calculate_slot_score(
+    schedule,
+    faculty_id,
+    day,
+    period
+):
+
+    existing_periods = get_faculty_periods(
         schedule,
         faculty_id,
         day
     )
 
-    # Prefer same block
-    if previous_block:
-        return previous_block
+    if not existing_periods:
+        return 50
 
-    # Otherwise default to first block
-    return blocks[0]["block_id"]
+    nearest_gap = min(
+        abs(period - p)
+        for p in existing_periods
+    )
+
+    return nearest_gap
+
 
 def generate_schedule():
 
     schedule = []
 
-    for subject in subjects:
+    for allocation in subject_allocations:
 
-        faculty = find_faculty_for_subject(
-            subject["subject_name"]
-        )
+        faculty_id = allocation["faculty_id"]
 
-        if not faculty:
-            continue
+        slots_needed = allocation["hours_per_week"]
 
-        slots_needed = subject["slots_per_week"]
+        assigned = 0
 
-        assigned_count = 0
+        while assigned < slots_needed:
 
-        for day in days:
+            best_choice = None
 
-            for slot in time_slots:
+            best_score = -1
 
-                if assigned_count >= slots_needed:
-                    break
+            for day in day_orders:
 
-                if not faculty_conflict(
-                    schedule,
-                    faculty["faculty_id"],
-                    day,
-                    slot["slot_id"]
+                # Prevent all classes from landing on one day
+                if (
+                    faculty_daily_load(
+                        schedule,
+                        faculty_id,
+                        day
+                    ) >= 2
                 ):
+                    continue
 
-                    schedule.append({
+                for slot in time_slots:
 
-                        "faculty_id": faculty["faculty_id"],
-                        "faculty_name": faculty["name"],
+                    period = slot["slot_id"]
 
-                        "subject": subject["subject_name"],
+                    if faculty_conflict(
+                        schedule,
+                        faculty_id,
+                        day,
+                        period
+                    ):
+                        continue
 
-                        "day": day,
+                    if section_conflict(
+                        schedule,
+                        allocation["section"],
+                        day,
+                        period
+                    ):
+                        continue
 
-                        "slot_id": slot["slot_id"],
-                        "start_time": slot["start"],
-                        "end_time": slot["end"],
+                    score = calculate_slot_score(
+                        schedule,
+                        faculty_id,
+                        day,
+                        period
+                    )
 
-                        "block": assign_optimized_block(
-                            schedule,
-                            faculty["faculty_id"],
-                            day
+                    # Prefer larger gaps
+                    if score > best_score:
+
+                        best_score = score
+
+                        best_choice = (
+                            day,
+                            slot
                         )
 
-                    })
-
-                    assigned_count += 1
-
-            if assigned_count >= slots_needed:
+            if best_choice is None:
                 break
+
+            day, slot = best_choice
+
+            schedule.append({
+
+                "faculty_id":
+                allocation["faculty_id"],
+
+                "faculty_name":
+                allocation.get(
+                    "faculty_name",
+                    allocation["faculty_id"]
+                ),
+
+                "section":
+                allocation["section"],
+
+                "subject_code":
+                allocation["subject_code"],
+
+                "subject_name":
+                allocation["subject_name"],
+
+                "slot_letter":
+                allocation["slot"],
+
+                "day_order":
+                day,
+
+                "period":
+                slot["slot_id"],
+
+                "start_time":
+                slot["start"],
+
+                "end_time":
+                slot["end"]
+
+            })
+
+            assigned += 1
+
+    schedule.sort(
+        key=lambda x: (
+            str(x["day_order"]),
+            x["period"]
+        )
+    )
 
     return schedule

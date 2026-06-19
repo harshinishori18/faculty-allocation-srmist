@@ -1,41 +1,15 @@
 [
-  {
-    "subject_name": "AI",
-    "slots_per_week": 3
-  },
 
-  {
-    "subject_name": "ML",
-    "slots_per_week": 2
-  },
+    {
+        "subject_code": "CS2203",
+        "subject_name": "DSA",
+        "slot": "B"
+    },
 
-  {
-    "subject_name": "DBMS",
-    "slots_per_week": 4
-  },
+    {
+        "subject_code": "CS2204",
+        "subject_name": "DBMS",
+        "slot": "C"
+    }
 
-  {
-    "subject_name": "CN",
-    "slots_per_week": 3
-  },
-
-  {
-    "subject_name": "OS",
-    "slots_per_week": 3
-  },
-
-  {
-    "subject_name": "DAA",
-    "slots_per_week": 3
-  },
-
-  {
-    "subject_name": "TOC",
-    "slots_per_week": 2
-  },
-
-  {
-    "subject_name": "SE",
-    "slots_per_week": 2
-  }
 ]

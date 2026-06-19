@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Faculty Timetables</title>
+
+    <style>
+
+        body{
+            font-family: Arial, sans-serif;
+            padding:20px;
+            background:#f5f5f5;
+        }
+
+        .faculty-card{
+
+            background:white;
+
+            padding:20px;
+
+            margin-bottom:30px;
+
+            border-radius:10px;
+
+            box-shadow:0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        table{
+
+            width:100%;
+
+            border-collapse:collapse;
+
+            margin-top:10px;
+        }
+
+        th,td{
+
+            border:1px solid #ccc;
+
+            padding:8px;
+
+            text-align:center;
+        }
+
+        th{
+            background:#ececec;
+        }
+
+        .workload{
+
+            margin-top:20px;
+
+            background:#fafafa;
+
+            padding:12px;
+
+            border-left:4px solid #4CAF50;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<h1>Faculty Timetables</h1>
+
+{% for faculty, periods in timetable.items() %}
+
+<div class="faculty-card">
+
+    <h2>{{ faculty }}</h2>
+
+    <table>
+
+        <tr>
+
+            <th>Period</th>
+            <th>Time</th>
+
+            <th>Day Order 1</th>
+            <th>Day Order 2</th>
+            <th>Day Order 3</th>
+            <th>Day Order 4</th>
+            <th>Day Order 5</th>
+
+        </tr>
+
+        {% for slot in time_slots %}
+
+        <tr>
+
+            <td>P{{ slot.slot_id }}</td>
+
+            <td>
+                {{ slot.start }}
+                -
+                {{ slot.end }}
+            </td>
+
+            {% for day in [
+                "Day Order 1",
+                "Day Order 2",
+                "Day Order 3",
+                "Day Order 4",
+                "Day Order 5"
+            ] %}
+
+            <td>
+
+                {% if slot.slot_id in periods and day in periods[slot.slot_id] %}
+
+                    <b>
+                        {{ periods[slot.slot_id][day].subject_name }}
+                    </b>
+
+                    <br>
+
+                    {{ periods[slot.slot_id][day].section }}
+
+                {% endif %}
+
+            </td>
+
+            {% endfor %}
+
+        </tr>
+
+        {% endfor %}
+
+    </table>
+
+    <div class="workload">
+
+        <h3>Workload Summary</h3>
+
+        <p>
+            Total Classes:
+            {{ workload[faculty].total_classes }}
+        </p>
+
+        <p>
+            Unique Subjects:
+            {{ workload[faculty].unique_subjects }}
+        </p>
+
+        <p>
+            Unique Sections:
+            {{ workload[faculty].unique_sections }}
+        </p>
+
+        <p>
+            Consecutive Classes:
+            {{ workload[faculty].consecutive_classes }}
+        </p>
+
+        <p>
+            Idle Gaps:
+            {{ workload[faculty].idle_gaps }}
+        </p>
+
+        <p>
+            Workload Score:
+            {{ workload[faculty].workload_score }}
+        </p>
+
+    </div>
+
+</div>
+
+<br>
+
+{% endfor %}
+
+</body>
+
+</html>

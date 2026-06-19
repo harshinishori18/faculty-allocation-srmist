@@ -4,6 +4,15 @@ from routes.registration import registration_bp
 from routes.scheduler import scheduler_bp
 from routes.fa import fa_bp
 from models.fa_entry import FAEntry
+from scheduler.schedule_generator import generate_schedule
+from scheduler.export_schedule import (
+    build_matrix_timetable
+)
+
+from scheduler.analytics.workload import (
+    analyze_faculty_workload
+)
+from scheduler.sample_data import time_slots
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
@@ -37,6 +46,38 @@ def fa_list_page():
 @app.route('/allocation-sheet')
 def allocation_sheet_page():
     return render_template('allocation_sheet.html')
+
+@app.route('/timetable')
+def timetable():
+
+    schedule = generate_schedule()
+
+    matrix_timetable = build_matrix_timetable(
+        schedule
+    )
+
+    workload_data = analyze_faculty_workload(
+        schedule
+    )
+
+    print("\nTIMETABLE KEYS")
+    print(matrix_timetable.keys())
+
+    print("\nWORKLOAD DATA")
+    print(workload_data)
+
+    return render_template(
+
+        'timetable.html',
+
+        timetable=matrix_timetable,
+
+        workload=workload_data,
+
+        time_slots=time_slots
+
+    )
+
 
 if __name__ == '__main__':
     app.run(debug=True)
