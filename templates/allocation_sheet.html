@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Subject Allocation — SRMIST</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"/>
+  <style>
+    .page-wrap { padding:40px 48px; max-width:1200px; margin:0 auto; }
+    .sheet-card {
+      background:rgba(244,241,222,0.06); backdrop-filter:blur(20px);
+      border:1px solid rgba(244,241,222,0.12); border-radius:20px;
+      padding:40px 36px;
+    }
+    .sheet-title {
+      font-family:'Cormorant Garamond',serif; font-size:22px;
+      font-weight:400; color:var(--eggshell); text-align:center; margin-bottom:4px;
+    }
+    .sheet-sub {
+      font-size:10px; letter-spacing:3px; text-transform:uppercase;
+      color:var(--gold); text-align:center; margin-bottom:8px;
+    }
+    .sheet-dept {
+      font-size:12px; color:rgba(244,241,222,0.5); text-align:center;
+      margin-bottom:32px; line-height:1.8;
+    }
+    .search-row {
+      display:flex; gap:10px; margin-bottom:24px;
+    }
+    .search-row input {
+      flex:1; padding:12px 16px; border:1px solid rgba(244,241,222,0.2);
+      border-radius:8px; background:rgba(255,255,255,0.06);
+      color:var(--eggshell); font-family:'DM Sans',sans-serif;
+      font-size:14px; outline:none;
+    }
+    .search-row input:focus { border-color:var(--terra); }
+    .search-row input::placeholder { color:rgba(244,241,222,0.3); }
+    .alloc-table { width:100%; border-collapse:collapse; }
+    .alloc-table th {
+      padding:12px 16px; font-size:10px; letter-spacing:2px;
+      text-transform:uppercase; color:var(--gold); font-weight:400;
+      border-bottom:2px solid rgba(242,204,143,0.3);
+      border-right:1px solid rgba(244,241,222,0.08); text-align:left;
+    }
+    .alloc-table td {
+      padding:14px 16px; font-size:13px; color:var(--eggshell);
+      border-bottom:1px solid rgba(244,241,222,0.06);
+      border-right:1px solid rgba(244,241,222,0.06);
+      font-weight:300;
+    }
+    .alloc-table tr:hover td { background:rgba(244,241,222,0.04); }
+    .sno-cell { color:var(--gold); font-weight:500; }
+    .id-cell {
+      font-family:'DM Sans',sans-serif; font-weight:600;
+      color:var(--eggshell); font-size:12px;
+    }
+    .subj-cell {
+      font-family:'Cormorant Garamond',serif; font-size:15px;
+      color:rgba(242,204,143,0.9);
+    }
+    .wl-badge {
+      background:rgba(129,178,154,0.15); color:var(--sage);
+      border:1px solid rgba(129,178,154,0.3); padding:3px 10px;
+      border-radius:20px; font-size:12px; font-weight:600;
+    }
+    .loading { text-align:center; color:rgba(244,241,222,0.4);
+               font-size:14px; padding:40px; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-left">
+      <p class="eyebrow">SRM Institute of Science and Technology</p>
+      <h1>Faculty Allocation System</h1>
+    </div>
+    <div class="header-right">
+      <a href="/" style="color:rgba(244,241,222,0.5); text-decoration:none;
+         font-size:11px; letter-spacing:2px; text-transform:uppercase;">← Back</a>
+    </div>
+  </header>
+
+  <div class="page-wrap">
+    <div class="sheet-card">
+      <p class="sheet-sub">School of Computing</p>
+      <p class="sheet-title">Subject Allocation Sheet</p>
+      <p class="sheet-dept">
+        Department of Data Science and Business Systems<br>
+        Course Allocation — Academic Year 2025–26
+      </p>
+
+      <div class="search-row">
+        <input type="text" id="search_input"
+               placeholder="Search by Faculty ID or Name..."
+               oninput="filterTable()"/>
+      </div>
+
+      <div id="sheet_content">
+        <p class="loading">Loading allocation data...</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let allData = [];
+
+    async function loadSheet() {
+      const res  = await fetch('/allocation/sheet');
+      allData    = await res.json();
+      renderTable(allData);
+    }
+
+    function filterTable() {
+      const q = document.getElementById('search_input').value.toLowerCase();
+      const filtered = allData.filter(r =>
+        r.faculty_id.toLowerCase().includes(q) ||
+        r.name.toLowerCase().includes(q)
+      );
+      renderTable(filtered);
+    }
+
+    function renderTable(data) {
+      if (!data.length) {
+        document.getElementById('sheet_content').innerHTML =
+          '<p class="loading">No records found.</p>';
+        return;
+      }
+      let html = `<table class="alloc-table">
+        <thead><tr>
+          <th>Sno</th><th>Faculty ID</th><th>Workload</th>
+          <th>Faculty Name</th><th>Position</th>
+          <th>Subject 1</th><th>Subject 2</th>
+        </tr></thead><tbody>`;
+
+      data.forEach((r, i) => {
+        html += `<tr>
+          <td class="sno-cell">${i + 1}</td>
+          <td class="id-cell">${r.faculty_id}</td>
+          <td><span class="wl-badge">${r.workload}</span></td>
+          <td>${r.name}</td>
+          <td>${r.position}</td>
+          <td class="subj-cell">${r.subject1}</td>
+          <td class="subj-cell">${r.subject2}</td>
+        </tr>`;
+      });
+
+      html += '</tbody></table>';
+      document.getElementById('sheet_content').innerHTML = html;
+    }
+
+    loadSheet();
+  </script>
+</body>
+</html>

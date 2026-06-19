@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FA List — SRMIST</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"/>
+  <style>
+    .page-wrap { padding: 40px 48px; max-width: 1200px; margin: 0 auto; }
+    .form-card {
+      background: rgba(244,241,222,0.06); backdrop-filter: blur(20px);
+      border: 1px solid rgba(244,241,222,0.12); border-radius: 20px;
+      padding: 36px 32px; margin-bottom: 32px;
+    }
+    .form-card h3 {
+      font-family:'Cormorant Garamond',serif; font-size:24px;
+      font-weight:400; color:var(--eggshell); margin-bottom:24px;
+    }
+    .form-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
+      gap: 14px; margin-bottom: 20px;
+    }
+    .form-group { display:flex; flex-direction:column; gap:6px; }
+    .form-group label {
+      font-size:10px; letter-spacing:2px; text-transform:uppercase;
+      color:var(--gold); font-weight:400;
+    }
+    .form-group input, .form-group select {
+      padding:12px 14px; border:1px solid rgba(244,241,222,0.2);
+      border-radius:8px; background:rgba(255,255,255,0.06);
+      color:var(--eggshell); font-family:'DM Sans',sans-serif;
+      font-size:14px; outline:none;
+    }
+    .form-group input:focus, .form-group select:focus {
+      border-color:var(--terra);
+    }
+    .form-group select option { background:#3D405B; color:var(--eggshell); }
+    .report-card {
+      background: rgba(244,241,222,0.06); backdrop-filter:blur(20px);
+      border:1px solid rgba(244,241,222,0.12); border-radius:20px;
+      padding:36px 32px;
+    }
+    .report-title {
+      font-family:'Cormorant Garamond',serif; font-size:22px;
+      color:var(--eggshell); text-align:center; margin-bottom:6px;
+    }
+    .report-subtitle {
+      font-size:11px; letter-spacing:2px; text-transform:uppercase;
+      color:var(--gold); text-align:center; margin-bottom:28px;
+    }
+    .fa-table { width:100%; border-collapse:collapse; }
+    .fa-table th {
+      padding:12px 16px; font-size:10px; letter-spacing:2px;
+      text-transform:uppercase; color:var(--gold); font-weight:400;
+      border-bottom:2px solid rgba(242,204,143,0.3);
+      border-right:1px solid rgba(244,241,222,0.08); text-align:left;
+    }
+    .fa-table td {
+      padding:14px 16px; font-size:13px; color:var(--eggshell);
+      border-bottom:1px solid rgba(244,241,222,0.06);
+      border-right:1px solid rgba(244,241,222,0.06);
+    }
+    .fa-table tr:hover td { background:rgba(244,241,222,0.04); }
+    .year-group td:first-child {
+      font-family:'Cormorant Garamond',serif; font-size:18px;
+      font-weight:500; color:var(--gold);
+    }
+    .btn-remove {
+      background:transparent; color:rgba(224,100,100,0.7);
+      border:1px solid rgba(224,100,100,0.3); padding:5px 12px;
+      border-radius:6px; cursor:pointer; font-size:11px;
+      font-family:'DM Sans',sans-serif; letter-spacing:1px;
+    }
+    .btn-remove:hover { background:rgba(224,100,100,0.1); }
+    .empty-msg {
+      text-align:center; color:rgba(244,241,222,0.35);
+      font-size:14px; padding:40px;
+    }
+    .msg { margin-top:12px; font-size:13px; font-weight:500; }
+    .msg.success { color:#3a7d62; }
+    .msg.error { color:#b94040; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-left">
+      <p class="eyebrow">SRM Institute of Science and Technology</p>
+      <h1>Faculty Allocation System</h1>
+    </div>
+    <div class="header-right">
+      <a href="/" style="color:rgba(244,241,222,0.5); text-decoration:none;
+         font-size:11px; letter-spacing:2px; text-transform:uppercase;">← Back</a>
+    </div>
+  </header>
+
+  <div class="page-wrap">
+
+    <!-- Entry Form -->
+    <div class="form-card">
+      <p style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--terra);margin-bottom:8px;">New Entry</p>
+      <h3>Faculty Advisor List</h3>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Year</label>
+          <select id="f_year">
+            <option value="">Select Year</option>
+            <option value="I">I</option>
+            <option value="II">II</option>
+            <option value="III">III</option>
+            <option value="IV">IV</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Specialization</label>
+          <input type="text" id="f_spec" placeholder="e.g. CS Bigdata"/>
+        </div>
+        <div class="form-group">
+          <label>Section</label>
+          <input type="text" id="f_section" placeholder="e.g. AC1"/>
+        </div>
+        <div class="form-group">
+          <label>Student Count</label>
+          <input type="number" id="f_count" placeholder="e.g. 60"/>
+        </div>
+        <div class="form-group">
+          <label>Faculty Advisor (FA)</label>
+          <input type="text" id="f_fa" placeholder="Dr. Name"/>
+        </div>
+        <div class="form-group">
+          <label>Academic Advisor (AA)</label>
+          <input type="text" id="f_aa" placeholder="Dr. Name"/>
+        </div>
+      </div>
+      <button class="btn-primary" onclick="addEntry()">Add Entry</button>
+      <p id="form_msg" class="msg"></p>
+    </div>
+
+    <!-- Report Table -->
+    <div class="report-card">
+      <p class="report-subtitle">DSBS — Academic Year 2025–26</p>
+      <p class="report-title">Faculty Advisors List</p>
+      <div id="fa_report">
+        <p class="empty-msg">No entries yet. Add entries above to generate the report.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    async function addEntry() {
+      const body = {
+        year:             document.getElementById('f_year').value,
+        specialization:   document.getElementById('f_spec').value,
+        section:          document.getElementById('f_section').value,
+        student_count:    document.getElementById('f_count').value,
+        faculty_advisor:  document.getElementById('f_fa').value,
+        academic_advisor: document.getElementById('f_aa').value
+      };
+      const msg = document.getElementById('form_msg');
+      if (!body.year || !body.specialization || !body.section ||
+          !body.student_count || !body.faculty_advisor || !body.academic_advisor) {
+        msg.textContent = 'Please fill all fields.';
+        msg.className = 'msg error';
+        return;
+      }
+      const res  = await fetch('/fa/add', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify(body)
+      });
+      const data = await res.json();
+      if (res.ok) {
+        msg.textContent = 'Entry added successfully.';
+        msg.className = 'msg success';
+        // Clear fields
+        ['f_year','f_spec','f_section','f_count','f_fa','f_aa'].forEach(id => {
+          const el = document.getElementById(id);
+          el.value = '';
+        });
+        loadReport();
+      } else {
+        msg.textContent = data.error || 'Something went wrong.';
+        msg.className = 'msg error';
+      }
+    }
+
+    async function removeEntry(id) {
+      await fetch('/fa/delete/' + id, { method: 'DELETE' });
+      loadReport();
+    }
+
+    async function loadReport() {
+      const res  = await fetch('/fa/all');
+      const data = await res.json();
+      const div  = document.getElementById('fa_report');
+
+      if (!data.length) {
+        div.innerHTML = '<p class="empty-msg">No entries yet. Add entries above to generate the report.</p>';
+        return;
+      }
+
+      // Group by year
+      const grouped = {};
+      data.forEach(e => {
+        if (!grouped[e.year]) grouped[e.year] = [];
+        grouped[e.year].push(e);
+      });
+
+      let html = `<table class="fa-table">
+        <thead><tr>
+          <th>Year</th><th>Specialization</th><th>Section</th>
+          <th>Count</th><th>Faculty Advisor</th><th>Academic Advisor</th><th></th>
+        </tr></thead><tbody>`;
+
+      Object.entries(grouped).forEach(([year, entries]) => {
+        entries.forEach((e, i) => {
+          html += `<tr class="${i === 0 ? 'year-group' : ''}">
+            <td>${i === 0 ? year : ''}</td>
+            <td>${e.specialization}</td>
+            <td>${e.section}</td>
+            <td>${e.student_count}</td>
+            <td>${e.faculty_advisor}</td>
+            <td>${e.academic_advisor}</td>
+            <td><button class="btn-remove" onclick="removeEntry(${e.id})">Remove</button></td>
+          </tr>`;
+        });
+      });
+
+      html += '</tbody></table>';
+      div.innerHTML = html;
+    }
+
+    loadReport();
+  </script>
+</body>
+</html>
