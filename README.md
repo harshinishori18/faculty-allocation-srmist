@@ -30,3 +30,26 @@ A web application to manage and allocate subjects to faculty members.
 
 ## Mentor
 - Prof. [Name] — SRMIST
+
+------------------------------------------------------my corner---------
+
+Faculty Allocation System
+
+Backend Stack
+
+- Flask
+- SQLite
+- SQLAlchemy
+
+Completed
+
+✓ Faculty CRUD
+✓ Scheduler
+✓ Timetable Builder
+
+Pending
+
+□ Authentication
+□ Allocation CRUD
+□ Docker
+□ Deployment

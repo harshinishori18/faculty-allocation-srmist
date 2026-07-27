@@ -23,6 +23,7 @@
       <div class="divider"></div>
       <p class="subtitle">Manage faculty records — register new members,<br>update details, or remove entries.</p>
       <div class="btn-group">
+        <button class="btn-secondary"    onclick="window.location.href='/timetable'">Lookup Timetable</button>
         <button class="btn-primary"      onclick="openModal('addModal')">Register Faculty</button>
         <button class="btn-secondary"    onclick="openModal('editModal')">Edit Record</button>
         <button class="btn-ghost-danger" onclick="openModal('removeModal')">Remove Faculty</button>
@@ -39,6 +40,7 @@
       <input type="text"  id="add_username"   placeholder="Full Name" />
       <input type="email" id="add_email"      placeholder="Email Address" />
       <input type="text"  id="add_contact"    placeholder="Contact Number" />
+      <input type="password" id="add_password" placeholder="Temporary Password" />
       <div class="modal-btns">
         <button class="btn-primary"   onclick="addFaculty()">Register</button>
         <button class="btn-secondary" onclick="closeModal('addModal')">Cancel</button>
