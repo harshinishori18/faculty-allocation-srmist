@@ -1,33 +1,82 @@
-<!DOCTYPE html>
-<html>
+{% extends "base.html" %}
 
-<head>
-    <title>Faculty Timetable</title>
-</head>
+{% block title %}Faculty Timetables — SRMIST{% endblock %}
 
-<body>
+{% block header_right %}
+  <a href="/admin" style="color:rgba(244,241,222,0.5); text-decoration:none; font-size:11px; letter-spacing:2px; text-transform:uppercase;">← Back</a>
+{% endblock %}
 
-<h1>{{ faculty.faculty_name }}</h1>
+{% block content %}
+<div class="page-wrap">
+  <p class="page-subtitle">Schedule Overview</p>
+  <h1 class="page-title">Faculty Timetables</h1>
 
-<p>
-Faculty ID :
-{{ faculty.faculty_id }}
-</p>
+  {% for faculty, periods in timetable.items() %}
+  <div class="content-card">
+    <h3>{{ faculty }}</h3>
+    <div style="overflow-x: auto;">
+      <table class="data-table" style="min-width: 600px;">
+        <thead>
+          <tr>
+            <th>Period</th>
+            <th>Time</th>
+            {% for day in ["Day Order 1", "Day Order 2", "Day Order 3", "Day Order 4", "Day Order 5"] %}
+            <th>{{ day }}</th>
+            {% endfor %}
+          </tr>
+        </thead>
+        <tbody>
+          {% for slot in time_slots %}
+          <tr>
+            <td>P{{ slot.slot_id }}</td>
+            <td>{{ slot.start }} – {{ slot.end }}</td>
+            {% for day in ["Day Order 1", "Day Order 2", "Day Order 3", "Day Order 4", "Day Order 5"] %}
+            <td>
+              {% if slot.slot_id in periods and day in periods[slot.slot_id] %}
+                <div style="font-family: 'Cormorant Garamond', serif; font-size: 15px; color: var(--terra); font-weight: 500;">
+                  {{ periods[slot.slot_id][day].subject_name }}
+                </div>
+                <div style="font-size: 11px; color: rgba(244,241,222,0.5);">
+                  {{ periods[slot.slot_id][day].section }}
+                </div>
+              {% endif %}
+            </td>
+            {% endfor %}
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
 
-<p>
-Workload :
-{{ faculty.workload }}
-Hours
-</p>
-
-<hr>
-
-<pre>
-
-{{ timetable }}
-
-</pre>
-
-</body>
-
-</html>
+    <!-- Workload Stats -->
+    <div class="stat-block" style="margin-top: 16px;">
+      <h4>Workload Summary</h4>
+      <div class="stat-row">
+        <div class="stat-item">
+          <span class="stat-num">{{ workload[faculty].total_classes }}</span>
+          <span class="stat-label">Total Classes</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-num">{{ workload[faculty].unique_subjects }}</span>
+          <span class="stat-label">Subjects</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-num">{{ workload[faculty].consecutive_classes }}</span>
+          <span class="stat-label">Consecutive</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-num">{{ workload[faculty].idle_gaps }}</span>
+          <span class="stat-label">Idle Gaps</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-num">{{ workload[faculty].workload_score }}</span>
+          <span class="stat-label">Score</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% else %}
+  <div class="empty-state">No timetable data available.</div>
+  {% endfor %}
+</div>
+{% endblock %}

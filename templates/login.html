@@ -1,37 +1,22 @@
-<!DOCTYPE html>
-<html>
+{% extends "base.html" %}
 
-<head>
-    <title>Login</title>
-</head>
+{% block title %}Login — Faculty Allocation System{% endblock %}
 
-<body>
-
-<h1>Faculty Allocation System</h1>
-
-<br>
-
-<a href="/admin/login">
-
-<button>
-
-Admin
-
-</button>
-
-</a>
-
-<br><br>
-
-<a href="/faculty/login">
-
-<button>
-
-Faculty
-
-</button>
-
-</a>
-</body>
-
-</html>
+{% block content %}
+<main>
+  <div class="card">
+    <p class="overline">Welcome</p>
+    <h2>Faculty Allocation System</h2>
+    <div class="divider"></div>
+    <p class="subtitle">Select your role to continue.</p>
+    <div class="btn-group">
+      <a href="/admin/login" style="text-decoration: none;">
+        <button class="btn-primary" style="width: 100%;">Admin Portal</button>
+      </a>
+      <a href="/faculty/login" style="text-decoration: none;">
+        <button class="btn-secondary" style="width: 100%;">Faculty Portal</button>
+      </a>
+    </div>
+  </div>
+</main>
+{% endblock %}

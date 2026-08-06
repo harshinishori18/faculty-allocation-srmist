@@ -1,35 +1,57 @@
-<!DOCTYPE html>
-<html>
+{% extends "base.html" %}
 
-<head>
-    <title>Faculty Timetable Lookup</title>
-</head>
+{% block title %}Faculty Lookup — SRMIST{% endblock %}
 
-<body>
+{% block header_right %}
+  <a href="/admin" style="color:rgba(244,241,222,0.5); text-decoration:none; font-size:11px; letter-spacing:2px; text-transform:uppercase;">← Back</a>
+{% endblock %}
 
-<h1>Faculty Timetable Lookup</h1>
+{% block content %}
+<div class="page-wrap">
+  <p class="page-subtitle">Search Faculty</p>
+  <h1 class="page-title">Faculty Directory</h1>
 
-<form method="POST">
+  <!-- Search Form -->
+  <div class="content-card">
+    <h3>Search Faculty</h3>
+    <form method="GET" style="max-width: 500px;">
+      <div class="form-group">
+        <label>Faculty ID or Name</label>
+        <input type="text" name="q" placeholder="Search by ID or name..." />
+      </div>
+      <div class="btn-group">
+        <button type="submit" class="btn-primary">Search</button>
+      </div>
+    </form>
+  </div>
 
-    <input
-        type="text"
-        name="faculty_id"
-        placeholder="Faculty ID">
-
-    <button type="submit">
-        Lookup
-    </button>
-
-</form>
-
-{% if error %}
-
-<p style="color:red;">
-    {{ error }}
-</p>
-
-{% endif %}
-
-</body>
-
-</html>
+  <!-- Results -->
+  {% if results %}
+  <div class="content-card">
+    <h3>Search Results</h3>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Faculty ID</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Contact</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for faculty in results %}
+        <tr>
+          <td>{{ faculty.faculty_id }}</td>
+          <td>{{ faculty.username }}</td>
+          <td>{{ faculty.email }}</td>
+          <td>{{ faculty.contact }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% elif search_performed %}
+  <div class="empty-state">No faculty found matching your search.</div>
+  {% endif %}
+</div>
+{% endblock %}

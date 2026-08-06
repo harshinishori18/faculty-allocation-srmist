@@ -1,66 +1,74 @@
-<!DOCTYPE html>
-<html>
+{% extends "base.html" %}
 
-<head>
+{% block title %}Dashboard — Faculty Portal{% endblock %}
 
-<title>Faculty Dashboard</title>
+{% block header_right %}
+  <div style="display: flex; align-items: center; gap: 24px;">
+    <span style="color:var(--gold); font-size:13px; font-weight:500;">{{ faculty.username }}</span>
+    <a href="/logout" style="color:rgba(244,241,222,0.5); font-size:11px; letter-spacing:2px; text-transform:uppercase;">Logout</a>
+  </div>
+{% endblock %}
 
-</head>
+{% block content %}
+<div class="page-wrap">
+  <p class="page-subtitle">Personal Dashboard</p>
+  <h1 class="page-title">Welcome, {{ faculty.username }}</h1>
 
-<body>
+  <!-- Quick Stats -->
+  <div class="content-card">
+    <h3>Your Profile</h3>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+      <div>
+        <p style="font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 6px;">Faculty ID</p>
+        <p style="font-size: 16px; color: var(--eggshell);">{{ faculty.faculty_id }}</p>
+      </div>
+      <div>
+        <p style="font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 6px;">Email</p>
+        <p style="font-size: 16px; color: var(--eggshell);">{{ faculty.email }}</p>
+      </div>
+      <div>
+        <p style="font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 6px;">Contact</p>
+        <p style="font-size: 16px; color: var(--eggshell);">{{ faculty.contact }}</p>
+      </div>
+    </div>
+  </div>
 
-<h1>
+  <!-- Subjects & Workload -->
+  <div class="content-card">
+    <h3>Allocated Subjects</h3>
+    {% if subjects %}
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+      {% for subject in subjects %}
+      <div style="background: rgba(224, 122, 95, 0.12); border: 1px solid rgba(224, 122, 95, 0.2); border-radius: 10px; padding: 14px;">
+        <p style="font-family: 'Cormorant Garamond', serif; font-size: 18px; color: var(--terra); margin-bottom: 4px;">{{ subject }}</p>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <p class="empty-state">No subjects allocated yet.</p>
+    {% endif %}
+  </div>
 
-Welcome {{ faculty.username }}
+  <!-- Workload Summary -->
+  <div class="content-card">
+    <div class="stat-block">
+      <h4>Workload Summary</h4>
+      <div class="stat-row">
+        <div class="stat-item">
+          <span class="stat-num">{{ workload }}</span>
+          <span class="stat-label">Total Classes</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-num">{{ subjects|length }}</span>
+          <span class="stat-label">Subjects</span>
+        </div>
+      </div>
+    </div>
+  </div>
 
-</h1>
-
-<p>
-
-Faculty ID :
-{{ faculty.faculty_id }}
-
-</p>
-
-<p>
-
-Current Workload :
-<b>{{ workload }}</b> Hours
-
-</p>
-
-<h3>
-
-Subjects
-
-</h3>
-
-<ul>
-
-{% for subject in subjects %}
-
-<li>{{ subject }}</li>
-
-{% endfor %}
-
-</ul>
-
-<br>
-
-<button onclick="window.location.href='/timetable'">
-
-View Timetable
-
-</button>
-
-<br><br>
-
-<button onclick="window.location.href='/logout'">
-
-Logout
-
-</button>
-
-</body>
-
-</html>
+  <!-- Navigation -->
+  <div class="content-card" style="text-align: center;">
+    <a href="/logout" class="btn-secondary">Logout</a>
+  </div>
+</div>
+{% endblock %}

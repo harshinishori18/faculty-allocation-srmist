@@ -1,36 +1,23 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-
-    <meta charset="UTF-8">
-
-    <title>
-
-        {% block title %}
-
-        Faculty Allocation System
-
-        {% endblock %}
-
-    </title>
-
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{% block title %}Faculty Allocation System — SRMIST{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"/>
+  {% block extra_css %}{% endblock %}
 </head>
-
 <body>
+  <header>
+    <div class="header-left">
+      <p class="eyebrow">SRM Institute of Science and Technology</p>
+      <h1>Faculty Allocation System</h1>
+    </div>
+    <div class="header-right">
+      {% block header_right %}Academic Portal{% endblock %}
+    </div>
+  </header>
 
-<h1>
-
-Faculty Allocation System
-
-</h1>
-
-<hr>
-
-{% block content %}
-
-{% endblock %}
-
+  {% block content %}{% endblock %}
 </body>
-
 </html>

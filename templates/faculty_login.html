@@ -1,33 +1,35 @@
-<form method="POST">
+{% extends "base.html" %}
 
-<input
-type="text"
-name="faculty_id"
-placeholder="Faculty ID">
+{% block title %}Faculty Login — SRMIST{% endblock %}
 
-<br><br>
+{% block content %}
+<main>
+  <div class="card">
+    <p class="overline">Secure Access</p>
+    <h2>Faculty<br>Login</h2>
+    <div class="divider"></div>
+    <p class="subtitle">Enter your credentials to access the portal.</p>
 
-<input
-type="password"
-name="password"
-placeholder="Password">
+    <form method="POST" style="text-align: left;">
+      <div class="form-group">
+        <label>Faculty ID</label>
+        <input type="text" name="faculty_id" placeholder="e.g. F001" required/>
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" name="password" placeholder="Enter password" required/>
+      </div>
+      <div class="btn-group">
+        <button type="submit" class="btn-primary">Sign In</button>
+        <a href="/" style="text-decoration: none;">
+          <button type="button" class="btn-secondary" style="width: 100%;">Back</button>
+        </a>
+      </div>
+    </form>
 
-<br><br>
-
-<button>
-
-Login
-
-</button>
-
-</form>
-
-{% if error %}
-
-<p style="color:red">
-
-{{ error }}
-
-</p>
-
-{% endif %}
+    {% if error %}
+    <p class="msg error">{{ error }}</p>
+    {% endif %}
+  </div>
+</main>
+{% endblock %}

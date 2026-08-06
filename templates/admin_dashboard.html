@@ -1,38 +1,44 @@
-<!DOCTYPE html>
-<html>
+{% extends "base.html" %}
 
-<head>
-    <title>Admin Dashboard</title>
-</head>
+{% block title %}Admin Dashboard — SRMIST{% endblock %}
 
-<body>
+{% block header_right %}
+  <div style="display: flex; align-items: center; gap: 24px;">
+    <span style="color:var(--gold); font-size:13px; font-weight:500;">Admin Panel</span>
+    <a href="/admin/logout" style="color:rgba(244,241,222,0.5); font-size:11px; letter-spacing:2px; text-transform:uppercase;">Logout</a>
+  </div>
+{% endblock %}
 
-<h1>Admin Dashboard</h1>
+{% block content %}
+<div class="page-wrap">
+  <p class="page-subtitle">Administrative Panel</p>
+  <h1 class="page-title">Admin Dashboard</h1>
 
-<hr>
+  <!-- Quick Actions -->
+  <div class="content-card">
+    <h3>Management</h3>
+    <div class="btn-group" style="max-width: 400px;">
+      <a href="/faculty/add" style="text-decoration: none;">
+        <button class="btn-primary" style="width: 100%;">Register Faculty</button>
+      </a>
+      <a href="/allocation" style="text-decoration: none;">
+        <button class="btn-secondary" style="width: 100%;">Manage Allocations</button>
+      </a>
+      <a href="/faculty-lookup" style="text-decoration: none;">
+        <button class="btn-secondary" style="width: 100%;">View Faculty</button>
+      </a>
+      <a href="/admin/logout" style="text-decoration: none;">
+        <button class="btn-secondary" style="width: 100%;">Logout</button>
+      </a>
+    </div>
+  </div>
 
-<button onclick="window.location.href='/'">
-Home
-</button>
-
-<br><br>
-
-<button onclick="window.location.href='/faculty/register'">
-Register Faculty
-</button>
-
-<br><br>
-
-<button onclick="window.location.href='/allocation'"></button>
-Assign Subject
-</button>
-
-<br><br>
-
-<button>
-Lookup Timetable
-</button>
-
-</body>
-
-</html>
+  <!-- System Info -->
+  <div class="content-card">
+    <div class="stat-block">
+      <h4>System Overview</h4>
+      <p style="color: rgba(244, 241, 222, 0.7); font-size: 13px;">Use the management tools above to administer faculty, allocations, and timetables.</p>
+    </div>
+  </div>
+</div>
+{% endblock %}

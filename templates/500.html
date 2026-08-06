@@ -1,18 +1,19 @@
-<!DOCTYPE html>
-<html>
+{% extends "base.html" %}
 
-<head>
-    <title>Server Error</title>
-</head>
+{% block title %}Server Error — SRMIST{% endblock %}
 
-<body>
-
-<h1>500</h1>
-
-<p>Something went wrong.</p>
-
-<a href="/">Return Home</a>
-
-</body>
-
-</html>
+{% block content %}
+<main>
+  <div class="card">
+    <p class="overline">Error</p>
+    <h2>500</h2>
+    <div class="divider"></div>
+    <p class="subtitle">Something went wrong on our end. Please try again later.</p>
+    <div class="btn-group" style="margin-top: 32px;">
+      <a href="/" style="text-decoration: none;">
+        <button class="btn-primary" style="width: 100%;">Return Home</button>
+      </a>
+    </div>
+  </div>
+</main>
+{% endblock %}

@@ -1,94 +1,65 @@
-<!DOCTYPE html>
-<html>
+{% extends "base.html" %}
 
-<head>
-    <title>Faculty Allocation</title>
-</head>
+{% block title %}Subject Allocation — SRMIST{% endblock %}
 
-<body>
+{% block header_right %}
+  <a href="/admin" style="color:rgba(244,241,222,0.5); text-decoration:none; font-size:11px; letter-spacing:2px; text-transform:uppercase;">← Back</a>
+{% endblock %}
 
-<h2>Faculty Allocation</h2>
+{% block content %}
+<div class="page-wrap">
+  <p class="page-subtitle">Allocation Management</p>
+  <h1 class="page-title">Subject Allocation</h1>
 
-<form id="allocationForm">
+  <!-- Add Allocation Form -->
+  <div class="content-card">
+    <h3>Allocate Subjects to Faculty</h3>
+    <form method="POST" style="max-width: 600px;">
+      <div class="form-group">
+        <label>Faculty ID</label>
+        <input type="text" name="faculty_id" placeholder="e.g. F001" required/>
+      </div>
 
-    <label>Faculty</label>
+      <div style="border-top: 1px solid rgba(244,241,222,0.1); padding-top: 20px; margin-top: 20px;">
+        <p style="font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 14px;">Subject 1</p>
+        <div class="form-group">
+          <label>Subject Code</label>
+          <input type="text" name="subject1_code" placeholder="e.g. CS101" required/>
+        </div>
+        <div class="form-group">
+          <label>Subject Name</label>
+          <input type="text" name="subject1_name" placeholder="e.g. Data Structures" required/>
+        </div>
+      </div>
 
-    <br>
+      <div style="border-top: 1px solid rgba(244,241,222,0.1); padding-top: 20px; margin-top: 20px;">
+        <p style="font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 14px;">Subject 2</p>
+        <div class="form-group">
+          <label>Subject Code</label>
+          <input type="text" name="subject2_code" placeholder="e.g. CS102" required/>
+        </div>
+        <div class="form-group">
+          <label>Subject Name</label>
+          <input type="text" name="subject2_name" placeholder="e.g. Algorithms" required/>
+        </div>
+      </div>
 
-    <select id="faculty"></select>
+      <div class="form-group">
+        <label>Batch / Slot</label>
+        <input type="text" name="batch_slot" placeholder="e.g. B2" required/>
+      </div>
 
-    <br><br>
+      <div class="btn-group">
+        <button type="submit" class="btn-primary">Allocate Subjects</button>
+      </div>
+    </form>
 
-    <label>Subject</label>
-
-    <br>
-
-    <select id="subject"></select>
-
-    <br><br>
-
-    <label>Batch</label>
-
-    <br>
-
-    <select id="batch">
-        <option value="1">Batch 1</option>
-        <option value="2">Batch 2</option>
-    </select>
-
-    <br><br>
-
-    <label>Section</label>
-
-    <br>
-
-    <input
-        type="text"
-        id="section"
-        placeholder="Optional">
-
-    <br><br>
-
-    <button type="submit">
-
-        Assign
-
-    </button>
-
-</form>
-
-<hr>
-
-<h3>Current Allocations</h3>
-
-<table border="1">
-
-<thead>
-
-<tr>
-
-<th>Faculty</th>
-
-<th>Subject</th>
-
-<th>Batch</th>
-
-<th>Section</th>
-
-<th>Action</th>
-
-</tr>
-
-</thead>
-
-<tbody id="allocationTable">
-
-</tbody>
-
-</table>
-
-<script src="{{ url_for('static', filename='allocation.js') }}"></script>
-
-</body>
-
-</html>
+    {% if message %}
+    <p class="msg" style="color: #3a7d62;">{{ message }}</p>
+    {% endif %}
+    {% if error %}
+    <p class="msg error">{{ error }}</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
