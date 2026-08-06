@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Faculty Allocation</title>
+</head>
+
+<body>
+
+<h2>Faculty Allocation</h2>
+
+<form id="allocationForm">
+
+    <label>Faculty</label>
+
+    <br>
+
+    <select id="faculty"></select>
+
+    <br><br>
+
+    <label>Subject</label>
+
+    <br>
+
+    <select id="subject"></select>
+
+    <br><br>
+
+    <label>Batch</label>
+
+    <br>
+
+    <select id="batch">
+        <option value="1">Batch 1</option>
+        <option value="2">Batch 2</option>
+    </select>
+
+    <br><br>
+
+    <label>Section</label>
+
+    <br>
+
+    <input
+        type="text"
+        id="section"
+        placeholder="Optional">
+
+    <br><br>
+
+    <button type="submit">
+
+        Assign
+
+    </button>
+
+</form>
+
+<hr>
+
+<h3>Current Allocations</h3>
+
+<table border="1">
+
+<thead>
+
+<tr>
+
+<th>Faculty</th>
+
+<th>Subject</th>
+
+<th>Batch</th>
+
+<th>Section</th>
+
+<th>Action</th>
+
+</tr>
+
+</thead>
+
+<tbody id="allocationTable">
+
+</tbody>
+
+</table>
+
+<script src="{{ url_for('static', filename='allocation.js') }}"></script>
+
+</body>
+
+</html>

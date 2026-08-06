@@ -41,11 +41,23 @@ function clearModal(id) {
 // ── ADD ───────────────────────────────────────────────────
 async function addFaculty() {
   const body = {
-    faculty_id: document.getElementById('add_faculty_id').value,
-    username:   document.getElementById('add_username').value,
-    email:      document.getElementById('add_email').value,
-    contact:    document.getElementById('add_contact').value
-  };
+
+    faculty_id:
+        document.getElementById("add_faculty_id").value,
+
+    username:
+        document.getElementById("add_username").value,
+
+    email:
+        document.getElementById("add_email").value,
+
+    contact:
+        document.getElementById("add_contact").value,
+
+    password:
+        document.getElementById("add_password").value
+
+}
   const res  = await fetch('/faculty/add', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -55,7 +67,7 @@ async function addFaculty() {
   const msg  = document.getElementById('add_msg');
   msg.textContent = data.message || data.error;
   msg.className   = 'msg ' + (res.ok ? 'success' : 'error');
-}
+  }
 
 // ── SEARCH for edit ───────────────────────────────────────
 async function searchFaculty() {
