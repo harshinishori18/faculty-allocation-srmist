@@ -1,5 +1,5 @@
 from copy import error
-from venv import logger
+
 
 from flask import Blueprint, request, jsonify
 from config import db
